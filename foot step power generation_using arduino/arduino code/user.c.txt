@@ -1,0 +1,53 @@
+#include "user.h"
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+int prev = 0, stepCount = 0;
+unsigned long previousMillis = 0;
+unsigned long currentMillis;
+float v, vout, vin;
+
+void system_init() {
+  Serial.begin(9600);
+  pinMode(8, OUTPUT);  // LED
+  lcd.init();
+  lcd.backlight();
+}
+
+void display_welcome() {
+  lcd.setCursor(0, 0);
+  lcd.print("FOOT STEP POWER");
+  lcd.setCursor(0, 1);
+  lcd.print("   GENERATOR");
+  delay(2000);
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("STEP COUNT:");
+  lcd.setCursor(0, 1);
+  lcd.print("VOLTAGE:");
+}
+
+void read_step_and_voltage() {
+  v = analogRead(A0);
+  currentMillis = millis();
+
+  if (v != 0 && (prev == 0)) {
+    stepCount += 1;
+    digitalWrite(8, HIGH);
+    lcd.setCursor(12, 0);
+    lcd.print(stepCount);
+  } else {
+    if (currentMillis - previousMillis >= 100) {
+      previousMillis = currentMillis;
+      digitalWrite(8, LOW);
+    }
+  }
+
+  prev = v;
+
+  lcd.setCursor(9, 1);
+  vout = (v * 5.00) / 1024.00;
+  vin = (vout / 0.040909) * 100;
+  lcd.print(vin);
+  lcd.print("mV ");
+}

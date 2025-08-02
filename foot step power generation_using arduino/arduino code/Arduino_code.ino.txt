@@ -1,0 +1,11 @@
+#include "user.h"
+
+void setup() {
+  system_init();
+  display_welcome();
+}
+
+void loop() {
+  read_step_and_voltage();
+  delay(200);
+}

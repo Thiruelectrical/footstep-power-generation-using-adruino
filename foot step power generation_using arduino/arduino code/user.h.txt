@@ -1,0 +1,23 @@
+#ifndef USER_H
+#define USER_H
+
+#include <Arduino.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// LCD instance
+extern LiquidCrystal_I2C lcd;
+
+// Global variables
+extern int prev;
+extern int stepCount;
+extern unsigned long previousMillis;
+extern unsigned long currentMillis;
+extern float v, vout, vin;
+
+// Function declarations
+void system_init();
+void display_welcome();
+void read_step_and_voltage();
+
+#endif
